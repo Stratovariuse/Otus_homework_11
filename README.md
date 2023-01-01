@@ -41,9 +41,8 @@ CREATE INDEX sch_r ON flights_range (scheduled_departure);
 
 * Создаем таблицы по таймзонам
 
-CREATE TABLE flights_range_201706 PARTITION OF flights_range  
-
-       FOR VALUES FROM ('2017-06-01'::timestamptz) TO ('2017-07-01'::timestamptz);  
+CREATE TABLE flights_range_201706 PARTITION OF flights_range    
+	FOR VALUES FROM ('2017-06-01'::timestamptz) TO ('2017-07-01'::timestamptz);  
 CREATE TABLE flights_range_201707 PARTITION OF flights_range  
        FOR VALUES FROM ('2017-07-01'::timestamptz) TO ('2017-08-01'::timestamptz);  
 CREATE TABLE flights_range_201709 PARTITION OF flights_range  
