@@ -25,7 +25,7 @@ CREATE TABLE flights_range (
 	CONSTRAINT rflights_pkey PRIMARY KEY(flight_id, scheduled_departure),  
 	CONSTRAINT rflights_flight_no_scheduled_departure_key UNIQUE(flight_no, scheduled_departure),  
 	CONSTRAINT rflights_check CHECK(scheduled_arrival > scheduled_departure),  
-	CONSTRAINT rflights_check1 CHECK(actual_arrival IS NULL OR actual_departure IS NOT NULL AND actual_arrival IS NOT NULL AND actual_arrival > actual_departure),  
+	CONSTRAINT rflights_check1 CHECK(actual_arrival IS NULL OR actual_departure IS NOT NULL AND actual_arrival IS NOT NULL AND actual_arrival > actual_departure), 
 	CONSTRAINT rflights_status_check CHECK(status::text = ANY (ARRAY['On Time'::character varying::text, 'Delayed'::character varying::text,  
  'Departed'::character varying::text, 'Arrived'::character varying::text, 'Scheduled'::character varying::text,  
 'Cancelled'::character varying::text])),  
@@ -33,6 +33,9 @@ CREATE TABLE flights_range (
 	CONSTRAINT rflights_arrival_airport_fkey FOREIGN KEY (arrival_airport) REFERENCES airports_data(airport_code),  
 	CONSTRAINT rflights_departure_airport_fkey FOREIGN KEY (departure_airport) REFERENCES airports_data(airport_code))  
 PARTITION BY RANGE(scheduled_departure);  
+
+Еще создадим индекс:
+CREATE INDEX sch_r ON flights_range (scheduled_departure);
 
 ![Альт-текст](Screenshot_6.png)
 
@@ -64,4 +67,4 @@ INSERT INTO flights_range SELECT * FROM flights;
 * Проверяем что все успешно и поиск идет у нас по таблице с нужным рейнжем:
 EXPLAIN ANALYZE select flight_id, flight_no, status from flights_range where scheduled_departure = '2017-05-28 09:50:00+03';
 
-![Альт-текст](Screenshot_8.png)
+![Альт-текст](Screenshot_9.png)
