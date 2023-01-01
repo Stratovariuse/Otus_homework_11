@@ -68,3 +68,7 @@ INSERT INTO flights_range SELECT * FROM flights;
 EXPLAIN ANALYZE select flight_id, flight_no, status from flights_range where scheduled_departure = '2017-05-28 09:50:00+03';
 
 ![Альт-текст](Screenshot_9.png)
+
+
+### НЕ СРАБАТЫВАЕТ СКАНИРОВАНИЕ ПО ИНДЕКСУ
+![Альт-текст](Screenshot_10.png)
