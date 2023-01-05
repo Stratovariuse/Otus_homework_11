@@ -69,7 +69,7 @@ EXPLAIN ANALYZE select flight_id, flight_no, status from flights_range where sch
 ![Альт-текст](Screenshot_9.png)
 
 
-### НЕ СРАБАТЫВАЕТ СКАНИРОВАНИЕ ПО ИНДЕКСУ
-EXPLAIN ANALYZE select flight_id, flight_no, status, scheduled_departure::date from flights_range where scheduled_departure::date = '2017-05-28*';  
+### Если изменить тип на дату вместо таймстапа то поиска по индексу не будет
+EXPLAIN ANALYZE select flight_id, flight_no, status, scheduled_departure::date from flights_range where scheduled_departure::date = '2017-05-28';  
 
 ![Альт-текст](Screenshot_10.png)
