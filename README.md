@@ -73,3 +73,35 @@ EXPLAIN ANALYZE select flight_id, flight_no, status from flights_range where sch
 EXPLAIN ANALYZE select flight_id, flight_no, status, scheduled_departure::date from flights_range where scheduled_departure::date = '2017-05-28';  
 
 ![Альт-текст](Screenshot_10.png)
+
+## ДОМАШНЕЕ SQL
+
+```S
+create table mob_main (
+phone numeric(11),
+date timestamptz,
+type  character varying(3),
+sum numeric(15,2),
+CONSTRAINT phone_pkey PRIMARY KEY(phone, date),
+CONSTRAINT type_chech check(type::text = any(array['in'::character varying::text, 'out'::character varying::text])),
+CONSTRAINT sum_check check(sum > 0))
+PARTITION BY RANGE(date);
+
+CREATE TABLE mob_range_0701 PARTITION OF mob_main
+FOR VALUES FROM ('2023-07-01'::timestamptz) TO ('2023-07-10'::timestamptz);
+CREATE TABLE mob_range_0702 PARTITION OF mob_main
+FOR VALUES FROM ('2023-07-10'::timestamptz) TO ('2023-07-20'::timestamptz);
+CREATE TABLE mob_range_0703 PARTITION OF mob_main
+FOR VALUES FROM ('2023-07-20'::timestamptz) TO ('2023-08-01'::timestamptz);
+
+do $$
+begin
+for i in 1..50000 loop
+INSERT INTO mob_main(phone, date, type, sum) values--(89610174440, '2023-07-02 23:00:00'::timestamp(0), 'out', 2.25);
+  (((random()*(89999999999-89000000000+1))+89000000000)
+  , (random() * ('2023-07-31 00:00:00'::timestamp - '2023-07-01 00:00:00'::timestamp) + '2023-07-01 00:00:00'::timestamp)
+  , (select (array['in', 'out'])[floor(random() * 2 + 1)])
+  , (SELECT trunc((random() * 100 + 1)::numeric, 2)));
+end loop;
+end; $$;
+```
